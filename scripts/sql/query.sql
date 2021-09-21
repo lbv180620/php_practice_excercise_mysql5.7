@@ -1,4 +1,4 @@
-create database php_work;
+create database if not exists php_work;
 
 show databases;
 
@@ -10,6 +10,6 @@ create table todo_items (
     todo_item varchar(100) not null,
     is_completed tinyint default 0 not null,
     primary key(id)
-    )default charset=utf8mb4 collate=utf8mb4_general_ci;
+    ) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci;
 
 show tables;
