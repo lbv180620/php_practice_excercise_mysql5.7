@@ -119,6 +119,7 @@ try {
                             </table>
                             <a href="./csv.php" class="btn btn-outline-primary">CSVファイルに変換</a>
                             <a href="./upload.php" class="btn btn-outline-primary">CSVファイルをアップロードして更新</a>
+                            <a href="./download.php" class="btn btn-outline-primary">CSVファイルをダウンロード</a>
                         <?php endif ?>
                     </div>
                 </div>

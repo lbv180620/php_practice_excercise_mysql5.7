@@ -34,7 +34,7 @@ try {
     $dbh = null;
 }
 
-$file_name = dirname(__FILE__, 4) . '/share/work.csv';
+$file_name = dirname(__FILE__, 4) . '/vagrant_data/work.csv';
 $fp = fopen($file_name, 'w');
 
 if ($fp) {

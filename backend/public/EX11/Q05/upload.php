@@ -25,6 +25,11 @@ session_regenerate_id();
                 <div class="card">
                     <div class="card-header">CSVファイルのアップロード</div>
                     <div class="card-body">
+                        <?php if (isset($_SESSION['err']['msg'])) : ?>
+                            <div class="alert alert-danger" role="danger">
+                                <?= $_SESSION['err']['msg'] ?>
+                            </div>
+                        <?php endif ?>
                         <form action="./update.php" method="post" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label for="csv-file">CSVファイルを選択してください</label>
