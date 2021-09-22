@@ -48,9 +48,5 @@ foreach ($list as $record) {
             $record[$k] = mb_convert_encoding($v, 'SJIS-win', 'UTF-8');
         }
     }
-    echo implode(',', $record) . "\n";
+    readfile(implode(',', $record));
 }
-
-// mb_http_output("pass");
-// header("Cache-Control: public");
-// header("Pragma: public");
