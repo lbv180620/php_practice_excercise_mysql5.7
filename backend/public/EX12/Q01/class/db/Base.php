@@ -5,21 +5,26 @@ require dirname(__FILE__, 6) . '/vendor/autoload.php';
 
 class Base
 {
+    private static $dbname;
+    private static $host;
+    private static $user;
+    private static $passwd;
+    private static $driver_opts;
 
     protected $dbh;
 
     public function __construct()
     {
-        $DB_NAME = 'php_work';
-        $DB_HOST = ENV::get('DB_HOST');
-        $DB_USER = ENV::get('DB_USER');
-        $DB_PASS = ENV::get('DB_PASS');
-        $DRIVER_OPTS = [
+        self::$dbname = 'php_work';
+        self::$host = Env::get('DB_HOST');
+        self::$user = Env::get('DB_USER');
+        self::$passwd = Env::get('DB_PASS');
+        self::$driver_opts = [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_EMULATE_PREPARES => false,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         ];
-        $dsn = "mysql:dbname=" . $DB_NAME . ";host=" . $DB_HOST . ";charset=utf8";
-        $this->dbh = new PDO($dsn, $DB_USER, $DB_PASS, $DRIVER_OPTS);
+        $dsn = "mysql:dbname=" . self::$dbname . ";host=" . self::$host . ";charset=utf8";
+        $this->dbh = new PDO($dsn, self::$user, self::$passwd, self::$driver_opts);
     }
 }
