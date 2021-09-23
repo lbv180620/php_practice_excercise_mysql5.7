@@ -1,14 +1,15 @@
 <?php
+
 require_once 'Env.php';
 
 require dirname(__FILE__, 6) . '/vendor/autoload.php';
 
 class Base
 {
-    private static $dbname;
-    private static $host;
-    private static $user;
-    private static $passwd;
+    private static string $dbname;
+    private static string $host;
+    private static string $user;
+    private static string $passwd;
     private static $driver_opts;
 
     protected $dbh;
@@ -24,7 +25,9 @@ class Base
             PDO::ATTR_EMULATE_PREPARES => false,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         ];
+
         $dsn = "mysql:dbname=" . self::$dbname . ";host=" . self::$host . ";charset=utf8";
+
         $this->dbh = new PDO($dsn, self::$user, self::$passwd, self::$driver_opts);
     }
 }

@@ -1,43 +1,20 @@
 <?php
 
-use Dotenv\Dotenv;
-
-require dirname(__FILE__, 4) . '/vendor/autoload.php';
-
-Dotenv::createImmutable(dirname(__FILE__, 5))->load();
-
-$dbname = 'php_work';
-$host = $_ENV['DB_HOST'];
-$user = $_ENV['DB_USER'];
-$passwd = $_ENV['DB_PASS'];
-
-$dsn = "mysql:dbname={$dbname};host={$host};charset=utf8";
-
-$driver_opts = [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_EMULATE_PREPARES => false,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-];
-
+require './class/db/Env.php';
+require './class/db/Base.php';
+require './class/db/TodoItems.php';
 
 try {
-    $dbh = new PDO($dsn, $user, $passwd, $driver_opts);
+
+    $db = new TodoItems();
 
     if (isset($_POST['delete']) && $_POST['delete'] == "1") {
-        $sql = 'delete from todo_items where id = :id;';
-        $stmt = $dbh->prepare($sql);
-        $stmt->bindValue(':id', $_POST['id'], PDO::PARAM_INT);
+        $db->delete($_POST['id']);
     } else {
-        $sql = 'update todo_items set is_completed = :is_completed where id = :id;';
-        $stmt = $dbh->prepare($sql);
-        $stmt->bindValue(':id', $_POST['id'], PDO::PARAM_INT);
-        $stmt->bindValue(':is_completed', $_POST['is_completed'], PDO::PARAM_INT);
+        $db->updateIsCompletedByID($_POST['id'], $_POST['is_completed']);
     }
 
-    $stmt->execute();
-
-    $url = './';
-    header('Location: ' . $url, true, 301);
+    header('Location: ./', true, 301);
     exit;
 } catch (PDOException $e) {
     echo 'Connection Failed!' . PHP_EOL;

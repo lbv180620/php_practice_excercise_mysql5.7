@@ -1,32 +1,14 @@
 <?php
 
-use Dotenv\Dotenv;
-
-require dirname(__FILE__, 4) . '/vendor/autoload.php';
-
-Dotenv::createImmutable(dirname(__FILE__, 5))->load();
-
-$dbname = 'php_work';
-$host = $_ENV['DB_HOST'];
-$user = $_ENV['DB_USER'];
-$passwd = $_ENV['DB_PASS'];
-
-$dsn = "mysql:dbname={$dbname};host={$host};charset=utf8";
-
-$driver_opts = [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_EMULATE_PREPARES => false,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-];
+require_once './class/db/Env.php';
+require_once './class/db/Base.php';
+require_once './class/db/TodoItems.php';
 
 try {
-    $dbh = new PDO($dsn, $user, $passwd, $driver_opts);
 
-    $sql = "select * from todo_items order by expiration_date;";
-    $stmt = $dbh->prepare($sql);
-    $stmt->execute();
+    $db = new TodoItems();
 
-    $list = $stmt->fetchAll();
+    $list = $db->selectAll();
 } catch (Exception $e) {
     var_dump($e);
     exit;
