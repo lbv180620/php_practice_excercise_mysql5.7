@@ -34,14 +34,14 @@ class TodoItems extends Base
         $stmt->execute();
     }
 
-    public function updateIsCompletedByID(int $id, bool $isCompleted)
+    public function updateIsCompletedByID(int $id, int $isCompleted)
     {
-        $sql = 'update todo_items set is_completed = :is_completd where id = :id';
+        $sql = 'update todo_items set is_completed = :is_completed where id = :id';
 
         $stmt = $this->dbh->prepare($sql);
 
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-        $stmt->bindValue(':is_completed', (int) $isCompleted, PDO::PARAM_INT);
+        $stmt->bindValue(':is_completed', $isCompleted, PDO::PARAM_INT);
 
         $stmt->execute();
     }
@@ -59,7 +59,7 @@ class TodoItems extends Base
 
     public function insert(string $expirationDate, string $todoItem, int $isCompleted = 0)
     {
-        $sql = 'inser into todo_items (';
+        $sql = 'insert into todo_items (';
         $sql .= 'expiration_date,';
         $sql .= 'todo_item,';
         $sql .= 'is_completed';

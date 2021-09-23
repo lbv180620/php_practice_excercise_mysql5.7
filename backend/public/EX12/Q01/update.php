@@ -20,14 +20,8 @@ try {
     $db = new TodoItems();
 
     while (($buff = fgetcsv($fp)) !== false) {
-        $stmt->bindValue(':id', $buff[0], PDO::PARAM_INT);
-        $stmt->bindValue(':expiration_date', $buff[1], PDO::PARAM_STR);
-        $stmt->bindValue(':todo_item', $buff[2], PDO::PARAM_STR);
-        $stmt->bindValue(':is_completed', $buff[3], PDO::PARAM_INT);
-
-        $stmt->execute();
-
-        $db->update($buff[0], $buff[1], mb_convert_encoding($buff[2], 'UTF-8', 'SJIS-win'), $buff[3]);
+        //$db->update($buff[0], $buff[1], mb_convert_encoding($buff[2], 'UTF-8', 'SJIS-win'), $buff[3]);
+        $db->update($buff[0], $buff[1], $buff[2], $buff[3]);
     }
 
     header('Location: ./', true, 301);
