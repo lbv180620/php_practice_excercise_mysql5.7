@@ -11,13 +11,13 @@ class Users extends Base
         parent::__construct();
     }
 
-    public function addUser(string $email, string $passwd, string $name): bool
+    public function addUser(string $email, string $password, string $name): bool
     {
         if (!empty($this->findUserByEmail($email))) {
             return false;
         }
 
-        $passwd = password_hash($passwd, PASSWORD_DEFAULT);
+        $password = password_hash($password, PASSWORD_DEFAULT);
 
         $sql = 'insert into users (email, password, name)';
         $sql .= 'values';
@@ -26,7 +26,7 @@ class Users extends Base
         $stmt = $this->dbh->prepare($sql);
 
         $stmt->bindValue(':email', $email, PDO::PARAM_STR);
-        $stmt->bindValue(':password', $passwd, PDO::PARAM_STR);
+        $stmt->bindValue(':password', $password, PDO::PARAM_STR);
         $stmt->bindValue(':name', $name, PDO::PARAM_STR);
 
         $stmt->execute();

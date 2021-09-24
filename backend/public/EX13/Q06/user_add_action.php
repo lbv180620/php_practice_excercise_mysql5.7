@@ -13,7 +13,7 @@ $_SESSION['login'] = $_POST;
 try {
     $db = new Users();
 
-    $ret = $db->addUser($_POST['email'], $_POST['passwd'], $_POST['name']);
+    $ret = $db->addUser($_POST['email'], $_POST['password'], $_POST['name']);
 
     if (!$ret) {
         $_SESSION['err']['msg'] = '既に同じメールアドレスが登録されています。';
