@@ -20,32 +20,30 @@ session_regenerate_id();
 <body>
     <div class="container">
         <div class="row my-3">
-            <div class="col-md-3"></div>
-            <div class="col-md-6">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
                 <div class="card">
-                    <div class="card-header">ログイン</div>
+                    <div class="card-header">CSVファイルのアップロード</div>
                     <div class="card-body">
                         <?php if (isset($_SESSION['err']['msg'])) : ?>
-                            <div class="alert alert-danger" role="alert">
+                            <div class="alert alert-danger" role="danger">
                                 <?= $_SESSION['err']['msg'] ?>
                             </div>
                         <?php endif ?>
-                        <form action="./login_action.php" method="post">
+                        <form action="./update.php" method="post" enctype="multipart/form-data">
                             <div class="form-group">
-                                <label for="email">Email address</label>
-                                <input type="text" name="email" id="email" class="form-control">
+                                <label for="csv-file">CSVファイルを選択してください</label>
+                                <input type="file" name="csv_file" id="csv-file" class="form-control-file">
                             </div>
-                            <div class="form-group">
-                                <label for="password">Password</label>
-                                <input type="text" name="password" id="password" class="form-control">
-                            </div>
-                            <input type="submit" value="ログイン" class="btn btn-primary mb-3">
+                            <input type="submit" value="送信" class="btn btn-primary">
                         </form>
-                        <a href="./">もどる</a>
+                    </div>
+                    <div class="card-footer">
+                        <a href="./">←もどる</a>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3"></div>
+            <div class="col-md-4"></div>
         </div>
     </div>
 </body>
