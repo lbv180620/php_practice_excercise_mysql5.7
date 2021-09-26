@@ -116,7 +116,6 @@ try {
                             <a href="./csv.php" class="btn btn-outline-primary">CSVファイルに変換</a>
                             <a href="./upload.php" class="btn btn-outline-primary">CSVファイルをアップロードして更新</a>
                             <a href="./download.php" class="btn btn-outline-primary">CSVファイルをダウンロード</a>
-                            <a href="./user_add.php" class="btn btn-outline-primary">新規登録</a>
                         <?php endif ?>
                     </div>
                 </div>
