@@ -1,6 +1,6 @@
 use php_work;
 
 SET @i := 0;
-UPDATE users SET id = (@i := @i +1) ;
+UPDATE todo_items SET id = (@i := @i +1) ;
 
-ALTER TABLE users AUTO_INCREMENT=2;
+ALTER TABLE todo_items AUTO_INCREMENT=6;

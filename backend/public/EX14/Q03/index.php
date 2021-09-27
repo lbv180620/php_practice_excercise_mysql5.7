@@ -1,0 +1,110 @@
+<?php
+
+$dt = new DateTime('now', new DateTimeZone('Asia/Tokyo'));
+$today = $dt->format('Y-m-d');
+
+use Dotenv\Dotenv;
+
+require dirname(__FILE__, 4) . '/vendor/autoload.php';
+
+Dotenv::createImmutable(dirname(__FILE__, 5))->load();
+
+$dbname = 'php_work';
+$host = $_ENV['DB_HOST'];
+$user = $_ENV['DB_USER'];
+$passwd = $_ENV['DB_PASS'];
+
+$dsn = "mysql:dbname={$dbname};host={$host};charset=utf8";
+
+$driver_opts = [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_EMULATE_PREPARES => false,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+];
+
+$sql = "select * from todo_items order by expiration_date;";
+
+try {
+    $dbh = new PDO($dsn, $user, $passwd, $driver_opts);
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $list = $stmt->fetchAll();
+
+    $token = bin2hex(openssl_random_pseudo_bytes(32));
+    $_SESSION['token'] = $token;
+} catch (PDOException $e) {
+    echo 'Connection Failed!' . PHP_EOL;
+    exit($e->getMessage() . PHP_EOL);
+} finally {
+    $dbh = null;
+}
+?>
+
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <style>
+        #expiration_date {
+            width: 12rem;
+        }
+
+        #todo_item {
+            width: 25rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row my-3 justify-content-center">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">TODOリスト</div>
+                    <div class="card-body">
+                        <?php if (isset($_SESSION['err']['msg'])) : ?>
+                            <div class="alert alert-danger" role="alert">
+                                <?= $_SESSION['err']['msg'] ?>
+                            </div>
+                        <?php endif ?>
+                        <form action="./add.php" method="post" class="form-inline">
+                            <input type="hidden" name="token" value="<?= $token ?>">
+                            <div class="form-group mb-3 mr-2">
+                                <label for="expiration_date" class="sr-only"> 期限日</label>
+                                <input type="date" name="expiration_date" id="expiration_date" value="<?= $today ?>" class="form-control">
+                            </div>
+                            <div class="form-group mb-3 mr-2">
+                                <label for="todo_item" class="sr-only">TODO項目</label>
+                                <input type="text" name="todo_item" id="todo_item" placeholder="TODO項目を入力してください" class="form-control">
+                            </div>
+                            <input type="submit" value="追加" class="btn btn-primary mb-3">
+                        </form>
+                        <?php if (count($list) > 0) : ?>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>期限日</th>
+                                    <th>TODO項目</th>
+                                </tr>
+                                <?php foreach ($list as $v) : ?>
+                                    <tr>
+                                        <td><?= $v['expiration_date'] ?></td>
+                                        <td><?= $v['todo_item'] ?></td>
+                                    </tr>
+                                <?php endforeach ?>
+                            </table>
+                        <?php endif ?>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+    </div>
+</body>
+
+</html>
