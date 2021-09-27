@@ -1,5 +1,13 @@
 <?php
 
+session_start();
+session_id();
+
+$token = bin2hex(openssl_random_pseudo_bytes(32));
+$_SESSION['token'] = $token;
+
+//unset($_SESSION['err']['msg']);
+
 $dt = new DateTime('now', new DateTimeZone('Asia/Tokyo'));
 $today = $dt->format('Y-m-d');
 
@@ -29,9 +37,6 @@ try {
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     $list = $stmt->fetchAll();
-
-    $token = bin2hex(openssl_random_pseudo_bytes(32));
-    $_SESSION['token'] = $token;
 } catch (PDOException $e) {
     echo 'Connection Failed!' . PHP_EOL;
     exit($e->getMessage() . PHP_EOL);
