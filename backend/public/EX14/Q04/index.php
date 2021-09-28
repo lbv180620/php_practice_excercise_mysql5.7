@@ -3,28 +3,48 @@
 session_start();
 session_regenerate_id();
 
-require_once './class/db/Env.php';
-require_once './class/db/Base.php';
-require_once './class/db/TodoItems.php';
-
+// ログインしていないときは、login.phpへリダイレクト
 if (empty($_SESSION['user'])) {
     header('Location: ./login.php', true, 301);
     exit;
 }
 
+require_once './class/db/Env.php';
+require_once './class/config/Config.php';
+require_once './class/db/Base.php';
+require_once './class/db/TodoItems.php';
+require_once './class/util/SaftyUtil.php';
+
+// レコードを格納する配列の変数を初期化しておく
+$list = [];
+
+// エラーメッセージを格納する変数を初期化しておく
+$errMsg = '';
+
+
 try {
+    // 日本標準時の現在日付を取得
     $dt = new DateTime('now', new DateTimeZone('Asia/Tokyo'));
     $today = $dt->format('Y-m-d');
 
-    $db = new TodoItems();
+    // todo_itemsテーブルクラスのインスタンスを生成する
+    $dbh = new TodoItems();
 
+    // レコードを全件取得する（期限日の古いものから並び替える）
     $list = $db->selectAll();
 } catch (PDOException $e) {
     echo 'Connection Failed!' . PHP_EOL;
     exit($e->getMessage() . PHP_EOL);
+} catch (Exception $e) {
+    var_dump($e);
+    exit;
 } finally {
     $dbh = null;
 }
+
+// ワンタイムトークンを生成してセッションに保存
+$token = SaftyUtil::generateToken();
+
 ?>
 
 <!DOCTYPE html>
@@ -65,7 +85,13 @@ try {
                         </div>
                     </div>
                     <div class="card-body">
+                        <?php if (isset($_SESSION['err']['msg'])) : ?>
+                            <div class="alert alert-danger" role="alert">
+                                <?= $_SESSION['err']['msg'] ?>
+                            </div>
+                        <?php endif ?>
                         <form action="./add.php" method="post" class="form-inline">
+                            <input type="hidden" name="token" value="<?= $token ?>">
                             <div class="form-group mb-3 mr-2">
                                 <label for="expiration_date" class="sr-only"> 期限日</label>
                                 <input type="date" name="expiration_date" id="expiration_date" value="<?= $today ?>" class="form-control">
@@ -89,6 +115,7 @@ try {
                                         <td class="<?php if ($v['is_completed'] == 1) echo 'complete' ?>"><?= $v['todo_item'] ?></td>
                                         <td>
                                             <form action="./action.php" method="post" class="form-inline">
+                                                <input type="hidden" name="token" value="<?= $token ?>">
                                                 <input type="hidden" name="id" value="<?= $v['id'] ?>">
 
                                                 <div class="form-check form-check-inline mb-3 mr-1">

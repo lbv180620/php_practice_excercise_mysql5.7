@@ -1,8 +1,10 @@
 <?php
 
 session_start();
-
 session_regenerate_id();
+
+require_once('./class/config/Config.php');
+require_once('./class/util/SaftyUtil.php');
 
 ?>
 
@@ -37,9 +39,10 @@ session_regenerate_id();
                             </div>
                         <?php endif ?>
                         <form action="./login_action.php" method="post">
+                            <input type="hidden" name="token" value="<?= SaftyUtil::generateToken() ?>">
                             <div class="form-group">
                                 <label for="email">Email address</label>
-                                <input type="text" name="email" id="email" class="form-control">
+                                <input type="text" name="email" id="email" class="form-control" value="<?php if (isset($_SESSION['login']['email'])) echo $_SESSION['login']['email'] ?>">
                             </div>
                             <div class="form-group">
                                 <label for="password">Password</label>

@@ -1,13 +1,17 @@
 <?php
 
 session_start();
-
 session_regenerate_id();
 
+// ログインしていないときは、login.phpへリダイレクト
 if (empty($_SESSION['user'])) {
     header('Location: ./login.php', true, 301);
     exit;
 }
+
+// 必要なファイルを読み込む
+require_once('./class/config/Config.php');
+require_once('./class/util/SaftyUtil.php');
 
 ?>
 
@@ -36,6 +40,7 @@ if (empty($_SESSION['user'])) {
                             </div>
                         <?php endif ?>
                         <form action="./update.php" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="token" value="<?= SaftyUtil::generateToken() ?>">
                             <div class="form-group">
                                 <label for="csv-file">CSVファイルを選択してください</label>
                                 <input type="file" name="csv_file" id="csv-file" class="form-control-file">

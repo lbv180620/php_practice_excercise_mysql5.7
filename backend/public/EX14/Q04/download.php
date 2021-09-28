@@ -1,23 +1,27 @@
 <?php
 
 session_start();
-
 session_regenerate_id();
 
-require_once './class/db/Env.php';
-require_once './class/db/Base.php';
-require_once './class/db/TodoItems.php';
-
+// ログインしていないときは、login.phpへリダイレクト
 if (empty($_SESSION['user'])) {
     header('Location: ./login.php', true, 301);
     exit;
 }
 
+require_once './class/db/Env.php';
+require_once './class/config/Config.php';
+require_once './class/db/Base.php';
+require_once './class/db/TodoItems.php';
+
+// エラーメッセージをクリア
+unset($_SESSION['err']['msg']);
+
 try {
 
-    $db = new TodoItems();
+    $dbh = new TodoItems();
 
-    $list = $db->selectAll();
+    $list = $dbh->selectAll();
 } catch (Exception $e) {
     var_dump($e);
     exit;
@@ -25,6 +29,7 @@ try {
     $dbh = null;
 }
 
+//// 取得したレコードをCSVファイルとしてダウンロードさせる
 $rename = 'work.download.csv';
 // $file_path = dirname(__FILE__, 4) . '/vagrant_data/work.csv';
 
@@ -33,12 +38,14 @@ header('Content-Type: text/csv');
 header("Content-Disposition: attachment; filename='{$rename}'");
 
 
-foreach ($list as $record) {
+foreach ($list as $rec) {
     // Excel使う場合
-    // foreach ($record as $k => $v) {
+    // foreach ($rec as $k => $v) {
     //     if ($k == 'todo_item') {
-    //         $record[$k] = mb_convert_encoding($v, 'SJIS-win', 'UTF-8');
+    //         $rec[$k] = mb_convert_encoding($v, 'SJIS-win', 'UTF-8');
     //     }
     // }
-    echo implode(',', $record) . "\n";
+
+    // 配列を「,」で結合して出力する
+    echo implode(',', $rec) . "\n";
 }

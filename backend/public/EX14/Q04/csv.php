@@ -1,49 +1,69 @@
 <?php
 
 session_start();
-
 session_regenerate_id();
 
-require_once './class/db/Env.php';
-require_once './class/db/Base.php';
-require_once './class/db/TodoItems.php';
-
+// // ログインしていないときは、login.phpへリダイレクト
 if (empty($_SESSION['user'])) {
     header('Location: ./login.php', true, 301);
     exit;
 }
 
-try {
-    $db = new TodoItems();
+require_once './class/db/Env.php';
+require_once './class/config/Config.php';
+require_once './class/db/Base.php';
+require_once './class/db/TodoItems.php';
 
-    $list = $db->selectAll();
+// エラーメッセージをクリア
+unset($_SESSION['err']['msg']);
+
+try {
+    $dbh = new TodoItems();
+
+    $list = $dbh->selectAll();
 } catch (PDOException $e) {
     echo 'Connection Failed!' . PHP_EOL;
     exit($e->getMessage() . PHP_EOL);
+} catch (Exception $e) {
+    // エラーメッセージをセッションに保存してエラーページにリダイレクト
+    $_SESSION['err']['msg'] = Config::MSG_EXCEPTION;
+    header('Location: ./error.php');
+    exit;
 } finally {
     $dbh = null;
 }
 
+// 書き込み成功|失敗フラグ
+$b = true;
+
 $file_name = dirname(__FILE__, 4) . '/vagrant_data/work.csv';
 $fp = fopen($file_name, 'w');
 
-if ($fp) {
-    foreach ($list as $record) {
-        foreach ($record as $k => $v) {
+if (!$fp) {
+    $b = false;
+} else {
+    // 文字列をSJIS-winに変換して、ファイルに書き込む
+    foreach ($list as $rec) {
+        foreach ($rec as $k => $v) {
             if ($k == 'todo_item') {
-                $record[$k] =  mb_convert_encoding($v, 'sjis-win', 'utf-8');
+                $rec[$k] =  mb_convert_encoding($v, 'sjis-win', 'utf-8');
             }
         }
-        if (fputcsv($fp, $record, ',', '"') === false) {
-            $msg = '書き込みに失敗しました。';
-        } else {
-            $msg = '書き込みに成功しました。';
+        if (@fputcsv($fp, $rec, ',', '"') === false) {
+            $b = false;
+            break;
         }
     }
 }
 
-fclose($fp);
+// フラグによる結果判定
+if ($b) {
+    $msg = '書き込みに成功しました。';
+} else {
+    $msg = '書き込みに失敗しました。';
+}
 
+fclose($fp);
 
 ?>
 

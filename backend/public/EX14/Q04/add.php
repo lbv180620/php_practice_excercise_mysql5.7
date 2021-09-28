@@ -1,23 +1,35 @@
 <?php
 
 session_start();
-
 session_regenerate_id();
 
-require_once './class/db/Env.php';
-require_once './class/db/Base.php';
-require_once './class/db/TodoItems.php';
-
+// ログインしていないときは、login.phpへリダイレクト
 if (empty($_SESSION['user'])) {
     header('Location: ./login.php', true, 301);
     exit;
 }
 
+require_once './class/db/Env.php';
+require_once './class/config/Config.php';
+require_once './class/db/Base.php';
+require_once './class/db/TodoItems.php';
+require_once './class/util/SaftyUtil.php';
+
+// ワンタイムトークンのチェック
+if (!SaftyUtil::isValidToken($_POST['token'])) {
+    $_SESSION['err']['msg'] = Config::MSG_INVALID_PROCESS;
+    header('Location: ./', true, 301);
+    exit;
+}
+
+// エラーメッセージをクリア
+unset($_SESSION['err']['msg']);
+
 try {
 
-    $db = new TodoItems();
+    $dbh = new TodoItems();
 
-    $db->insert($_POST['expiration_date'], $_POST['todo_item']);
+    $dbh->insert($_POST['expiration_date'], $_POST['todo_item']);
 
     header('Location: ./', true, 301);
     exit;
