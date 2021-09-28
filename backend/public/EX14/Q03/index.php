@@ -6,8 +6,6 @@ session_id();
 $token = bin2hex(openssl_random_pseudo_bytes(32));
 $_SESSION['token'] = $token;
 
-//unset($_SESSION['err']['msg']);
-
 $dt = new DateTime('now', new DateTimeZone('Asia/Tokyo'));
 $today = $dt->format('Y-m-d');
 
