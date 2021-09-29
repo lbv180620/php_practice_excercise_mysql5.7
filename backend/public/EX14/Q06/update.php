@@ -18,7 +18,7 @@ require_once './class/util/SaftyUtil.php';
 // ワンタイムトークンのチェック
 if (!SaftyUtil::isValidToken($_POST['token'])) {
     $_SESSION['err']['msg'] = Config::MSG_INVALID_PROCESS;
-    header('Location: ./', true, 301);
+    header('Location: ./user_add.php', true, 301);
     exit;
 }
 
@@ -26,13 +26,17 @@ if (!SaftyUtil::isValidToken($_POST['token'])) {
 try {
     // $_FILESが存在しない、もしくは、アップロード時にエラーが発生したとき
     if (!isset($_FILES['csv_file']) || $_FILES['csv_file']['error'] > 0) {
-        throw new Exception(Config::MSG_UPLOAD_FAILURE);
+        $_SESSION['err']['msg'] = Config::MSG_UPLOAD_FAILURE;
+        header('Location: ./upload.php', true, 301);
+        exit;
     }
 
     // アップロードされたCSVファイルを開く
     $fp = @fopen($_FILES['csv_file']['tmp_name'], 'r');
     if (!$fp) {
-        throw new Exception(Config::MSG_UPLOAD_FAILURE);
+        $_SESSION['err']['msg'] = Config::MSG_UPLOAD_FAILURE;
+        header('Location: ./upload.php', true, 301);
+        exit;
     }
 
     $dbh = new TodoItems();
@@ -53,17 +57,15 @@ try {
 
     header('Location: ./', true, 301);
     exit;
-} catch (Exception $e) {
-    $msg = $e->getMessage();
-    $_SESSION['err']['msg'] = $msg;
-    header('Location: ./upload.php', true, 301);
-    exit;
 } catch (PDOException $e) {
-    $msg = 'データベース接続に失敗しました';
-    $_SESSION['err']['msg'] = $msg;
     // トランザクションをロールバック
     $dbh->rollback();
-    header('Location: ./upload.php', true, 301);
+    $_SESSION['err']['msg'] = Config::MSG_PDOEXCEPTION;
+    header('Location: ./error.php', true, 301);
+    exit;
+} catch (Exception $e) {
+    $_SESSION['err']['msg'] = Config::MSG_EXCEPTION;
+    header('Location: ./error.php', true, 301);
     exit;
 } finally {
     $dbh = null;
