@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Class\db;
+namespace Classes\db;
 
-use Class\db\Base;
+use Classes\db\Base;
 
 /**
  * ユーザーテーブルクラス

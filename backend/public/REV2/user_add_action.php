@@ -2,10 +2,10 @@
 
 require_once dirname(__FILE__, 3) . 'vendor/autoload.php';
 
-use Class\config\Config;
-use Class\db\Users;
-use Class\utils\SaftyUtil;
-use Class\utils\SessionUtil;
+use Classes\config\Config;
+use Classes\db\Users;
+use Classes\utils\SaftyUtil;
+use Classes\utils\SessionUtil;
 
 SessionUtil::sessionStart();
 

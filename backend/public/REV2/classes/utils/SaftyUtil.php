@@ -1,8 +1,8 @@
 <?php
 
-namespace Class\utils;
+namespace Classes\utils;
 
-use Class\config\Config;
+use Classes\config\Config;
 
 /**
  * 安全対策ユーティリティクラス

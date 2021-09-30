@@ -1,8 +1,8 @@
 <?php
 
-namespace Class\db;
+namespace Classes\db;
 
-use Class\db\Base;
+use Classes\db\Base;
 
 /**
  * todo_itemsテーブルクラス

@@ -2,7 +2,7 @@
 
 require_once dirname(__FILE__, 3) . 'vendor/autoload.php';
 
-use Class\utils\SessionUtil;
+use Classes\utils\SessionUtil;
 
 SessionUtil::sessionStart();
 

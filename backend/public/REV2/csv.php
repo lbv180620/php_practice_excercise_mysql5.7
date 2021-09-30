@@ -2,9 +2,9 @@
 
 require_once dirname(__FILE__, 3) . 'vendor/autoload.php';
 
-use Class\config\Config;
-use Class\db\TodoItems;
-use Class\utils\SessionUtil;
+use Classes\config\Config;
+use Classes\db\TodoItems;
+use Classes\utils\SessionUtil;
 
 SessionUtil::sessionStart();
 

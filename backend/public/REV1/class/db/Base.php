@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once 'Env.php';
 
-require dirname(__FILE__, 6) . '/vendor/autoload.php';
+require dirname(__FILE__, 5) . '/vendor/autoload.php';
 
 /**
  * DB操作基底クラス

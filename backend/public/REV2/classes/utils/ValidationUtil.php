@@ -1,6 +1,6 @@
 <?php
 
-namespace Class\utils;
+namespace Classes\utils;
 
 class ValidationUtil
 {

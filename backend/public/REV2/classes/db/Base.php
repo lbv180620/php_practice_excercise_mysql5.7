@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Class\db;
+namespace Classes\db;
 
-use Class\db\Env;
-use Class\config\Config;
+use Classes\db\Env;
+use Classes\config\Config;
 
-require dirname(__FILE__, 6) . '/vendor/autoload.php';
+require dirname(__FILE__, 5) . '/vendor/autoload.php';
 
 /**
  * DB操作基底クラス
