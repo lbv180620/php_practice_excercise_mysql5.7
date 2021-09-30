@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__FILE__, 3) . 'vendor/autoload.php';
+require_once dirname(__FILE__, 3) . '/vendor/autoload.php';
 
 use Classes\config\Config;
 use Classes\db\TodoItems;
