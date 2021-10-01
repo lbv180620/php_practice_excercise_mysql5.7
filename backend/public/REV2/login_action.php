@@ -18,6 +18,7 @@ if (!SaftyUtil::isValidToken($_POST['token'])) {
 
 // ブルートフォースアタック対策
 // ログイン3回失敗でログインできないようにする
+// /tmpにあるセッションファイルが消えない限り、ずっとlogin_failure >= 3なのでログインできない
 if (isset($_SESSION['login_failure']) && $_SESSION['login_failure'] >= 3) {
     $_SESSION['err']['msg'] = Config::MSG_USER_LOGIN_TRY_TIMES_OVER;
     header('Location: ./error.php', true, 301);
