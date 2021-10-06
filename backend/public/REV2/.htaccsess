@@ -1,0 +1,4 @@
+php_value session.save_path “/tmp_php_session”
+php_value session.gc_maxlifetime 10
+php_value session.gc_probability 1
+php_value session.gc_divisor 1

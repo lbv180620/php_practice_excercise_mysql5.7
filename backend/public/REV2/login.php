@@ -6,6 +6,7 @@ use Classes\utils\SaftyUtil;
 use Classes\utils\SessionUtil;
 
 SessionUtil::sessionStart();
+// session_start();
 
 ?>
 

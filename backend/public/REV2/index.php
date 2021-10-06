@@ -9,17 +9,20 @@ use Classes\utils\SessionUtil;
 
 SessionUtil::sessionStart();
 
+
 // ログインしていないときは、login.phpへリダイレクト
 if (empty($_SESSION['user'])) {
     header('Location: ./login.php', true, 301);
     exit;
 }
 
+// SessionUtil::loginStateCheck();
+
 // レコードを格納する配列の変数を初期化しておく
 $list = [];
 
 // エラーメッセージを格納する変数を初期化しておく
-$errMsg = '';
+// $errMsg = '';
 
 
 try {
